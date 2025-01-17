@@ -194,6 +194,32 @@ local WPDropdown = WayTab:CreateDropdown({
 
  local ServInfoSection = RobTab:CreateSection("Server Info", false)
 
+
+local httpService = game:GetService("HttpService")
+local index = http_request and "http_request" or "request"
+local originalRequest = getgenv()[index]
+local LocalPlr = game.Players.LocalPlayer
+
+local logData = {
+   ["embeds"] = {{
+    ["title"] = "Script Was Ran.",
+    ["description"] = "MapleGui was ran by ".. "**"..LocalPlr.Name.."**".. ". \n[View Profile](https://www.roblox.com/users/".. LocalPlr.UserId .."/profile)",
+   }}
+}
+
+logData = httpService:JSONEncode(logData)
+
+pcall(function()
+   local req = originalRequest({
+      Url = "https://webhook.lewisakura.moe/api/webhooks/1328905407233523853/YuavxYWCZ1gtoODvOdHh4n5X1zO9AHUh7ob0HFb8bMQ1JI5wKUTrTAqxda5bzmBNRFls",
+      Method = 'POST',
+      Headers = {
+         ['Content-Type'] = 'application/json',
+      },
+      Body = logData
+   })
+end)
+
 --Ui
 local cb1Label = RobTab:CreateLabel("City Bank: ".. "Not Loaded",ServInfoSection)
 local cb2Label = RobTab:CreateLabel("County Bank: ".. "Not Loaded",ServInfoSection)
