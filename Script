@@ -1,142 +1,138 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = OrionLib:MakeWindow({Name = "Maple County GUI", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+local Window = Rayfield:CreateWindow({
+   Name = "MapleGui v4",
+   Icon = 0, 
+   LoadingTitle = "MapleGui v4",
+   LoadingSubtitle = "by NASTi_NAS",
+   Theme = "Amethyst",
 
-UIName = "Maple County GUI"
-IntroEnabled = true
+   DisableRayfieldPrompts = true,
+   DisableBuildWarnings = false, 
 
-local userscar = game.Players.LocalPlayer.Car
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, 
+      FileName = "MapleGuiSaveData"
+   },
 
---Tab 1 - Home
-local Tab = Window:MakeTab({
-	Name = "Home",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
+   Discord = {
+      Enabled = false, 
+      Invite = "noinvitelink", 
+      RememberJoins = true
+   },
+
+   KeySystem = false, 
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", 
+      FileName = "Key", 
+      SaveKey = true, 
+      GrabKeyFromSite = false, 
+      Key = {"Nothing!"} 
+   }
 })
 
 
+local HomeTab = Window:CreateTab("Home", 14940603912)
 
-local Section = Tab:AddSection({
-	Name = "Other Scripts"
-})
 
-Tab:AddButton({
-	Name = "Infinite Yield",
-	Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-  	end    
-})
+local Section = HomeTab:CreateSection("Other Scripts")
 
-Tab:AddButton({
+local Button = HomeTab:CreateButton({
 	Name = "DeleteMob:Aimbot",
 	Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/NewArmySoldier/MapleGUI/main/DeleteMob"))()
-  	end    
-})
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/NewArmySoldier/MapleGUI/main/DeleteMob"))()
+	end,
+ })
 
-local Section = Tab:AddSection({
-	Name = "Stuff"
-})
-
-Tab:AddButton({
-	Name = "Quick Pay Bounty",
+ local Button = HomeTab:CreateButton({
+	Name = "Infinite Yield",
 	Callback = function()
-        local args = {
-            [1] = {
-                [1] = "PayBounty"
-            }
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args)) 
-  	end    
-})
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+	end,
+ })
 
-Tab:AddButton({
-	Name = "Fill Gas *HELLCAT ONLY RN*",
+ local Section = HomeTab:CreateSection("Usefull Stuff")
+
+ local Button = HomeTab:CreateButton({
+	Name = "God Car | Inf Gas + Inf Health",
 	Callback = function()
-        local args = {
-            [1] = {
-                [1] = -100
+      local servCars = workspace.ScriptableParts.Other.IngameVehicles:GetChildren()
+      local LocalPlayer = game:GetService("Players").LocalPlayer
+
+      for i, v in pairs(servCars) do
+         local ownerAttribute = v:GetAttribute("Owner")
+         if ownerAttribute and ownerAttribute == LocalPlayer.Name then
+            local args = {
+                  [1] = {
+                     [1] = "PurchaseFuel",
+                     [2] = v,
+                     [3] = 1000,
+                     [4] = 0
+                  }
             }
-        }
-        
-        workspace:WaitForChild("ScriptableParts"):WaitForChild("Other"):WaitForChild("IngameVehicles"):WaitForChild(userscar):WaitForChild("VehicleEvents"):WaitForChild("Gas"):FireServer(unpack(args))
-  	end    
-})
+            
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
 
 
+            local args = {
+                  [1] = {
+                     [1] = -99999999
+                  }
+            }
+            
+            v:WaitForChild("VehicleEvents"):WaitForChild("Damage"):FireServer(unpack(args))
+         end
+      end
+	end,
+ })
 
-local Section = Tab:AddSection({
-	Name = "Quick Tools"
-})
 
-Tab:AddButton({
-	Name = "M4A1",
+ local Button = HomeTab:CreateButton({
+	Name = "Quick-Pay Bounty",
 	Callback = function()
-        local args = {
+         local args = {
             [1] = {
-                [1] = "EquipTool",
-                [2] = "M4A1",
-                [3] = "Guns"
+               [1] = "PayBounty"
             }
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
-  	end    
+      }
+      game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args)) 
+	end,
+ })
+
+
+ local Section = HomeTab:CreateSection("Misc")
+
+
+ local NoPause = false
+
+ local function preventPause()
+     while NoPause do
+         game:GetService("Players").LocalPlayer.GameplayPaused = false
+         wait(0.1) 
+     end
+ end
+
+
+ local PauseToggle = HomeTab:CreateToggle({
+   Name = "No 'GamePlay Paused'",
+   CurrentValue = false,
+   Flag = "GpPaused", 
+   Callback = function(Value)
+      NoPause = Value
+      if NoPause then
+         coroutine.wrap(preventPause)()
+      end
+   end,
 })
 
-Tab:AddButton({
-	Name = "Vest",
-	Callback = function()
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = "Vest",
-                [3] = "Van"
-            }
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
-  	end    
-})
-
---Tab 2 - Spawners
-local Tab = Window:MakeTab({
-	Name = "Spawners",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-
-Tab:AddDropdown({
-	Name = "Rifles",
-	Default = "nil",
-	Options = {"M4A1", "M16A4", "MP5"},
-	Callback = function(Value)
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = Value,
-                [3] = "Guns"
-            }
-        }
-        
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))  
-	end    
-})
-
-Tab:AddDropdown({
-	Name = "Pistols",
-	Default = "nil",
-	Options = {"Glock", "FIVE SEVEN", "M9"},
-	Callback = function(Value)
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = Value,
-                [3] = "Guns"
-            }
-        }
-        
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))  
-	end    
-})
+game:GetService("RunService").Stepped:Connect(function()
+   if NoPause then
+       game:GetService("Players").LocalPlayer.GameplayPaused = false
+   end
+end)
 
 local httpService = game:GetService("HttpService")
 local index = http_request and "http_request" or "request"
@@ -163,49 +159,24 @@ pcall(function()
    })
 end)
 
-Tab:AddDropdown({
-	Name = "Crim Tools",
-	Default = "nil",
-	Options = {"Vest", "C4", "Lockpick", "Laptop", "Tablet", "Prybar", "HandDrill"},
-	Callback = function(Value)
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = Value,
-                [3] = "Van"
-            }
-        }
-        
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))  
-	end    
-})
+ local Button = HomeTab:CreateButton({
+	Name = "Delete AntiCheat | Breaks Game!",
+	Callback = function()
+      local antiCheat = game:GetService("Players").LocalPlayer.PlayerGui.HUDUI.ClientCore
+      antiCheat:Destroy()
+	end,
+ })
 
+ local FinancesTab = Window:CreateTab("Finances", 14941475604)
 
-Tab:AddDropdown({
-    Name = "Other",
-    Default = "nil",
-    Options = {"Knife", "Bat", "Flashlight", "Umbrella"},
-    Callback = function(Value)
-
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = Value,
-                [3] = "Civilian"
-            }
-        }
-            
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))  
-    end    
-})
-
-Tab:AddLabel("Taser is in 'Fun' Tab")
-
-Tab:AddTextbox({
-	Name = "Money",
-	Default = "0",
-	TextDisappear = true,
-	Callback = function(Value)
+ local Input = FinancesTab:CreateInput({
+    Name = "Spawn Money",
+    PlaceholderText = "000",
+    NumbersOnly = true, 
+    CharacterLimit = false, 
+    OnEnter = true, 
+    RemoveTextAfterFocusLost = true, 
+    Callback = function(Text)
         local args = {
             [1] = {
                 [1] = "PlaceOrder",
@@ -213,7 +184,7 @@ Tab:AddTextbox({
                     [1] = {
                         ["Image"] = "rbxassetid://7053136501",
                         ["Name"] = "DONUT A",
-                        ["Price"] = -Value,
+                        ["Price"] = -Text,
                         ["Reference"] = workspace:WaitForChild("World"):WaitForChild("Buildings"):WaitForChild("Commercial"):WaitForChild("DunkinDonuts"):WaitForChild("ScriptableParts"):WaitForChild("MenuMonitors"):WaitForChild("Settings"):WaitForChild("ListA"),
                         ["Quantity"] = 1
                     }
@@ -246,213 +217,185 @@ Tab:AddTextbox({
         wait(.01)
         
         game:GetService("Players").LocalPlayer.Backpack["Donut (Pink)"]:Destroy()
-        
-	end	  
-})
-
---Tab 3 - Fun
-
-local Tab = Window:MakeTab({
-	Name = "Fun",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-
-local Section = Tab:AddSection({
-	Name = "God Weapons"
-})
-
-Tab:AddButton({
-	Name = "God M4A1",
-	Callback = function()
-        local gun = require(game.Players.LocalPlayer.Backpack["M4A1"].Options)
-
-        gun["ReloadLength"] = 0.01
-        gun["MagCount"] = 1000
-        gun["MagSize"] = 30
-        gun["Name"] = "GodGun"
-  	end    
-})
-
-Tab:AddButton({
-	Name = "God Taser",
-	Callback = function()
-        local taser = require(game.Players.LocalPlayer.Backpack["Taser"].Options)
-
-        taser["Range"] = 500000
-        taser["ManualFireRate"] = 0.1
-        taser["MagSize"] = 1
-        taser["BulletSpeed"] = 500
-        taser["ReloadLength"] = 0.001
-        taser["MagCount"] = 32
-        taser["Name"] = "God Taser"
-  	end    
-})
-
-Tab:AddLabel("Spawn / Remove Taser")
+    end,
+ })
 
 
-Tab:AddButton({
-	Name = "Spawn Taser",
-	Callback = function()
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = "Taser",
-                [3] = "Police"
-            }
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
-  	end    
-})
+ local MenuTab = Window:CreateTab("Menus", 14941475604)
 
-Tab:AddButton({
-	Name = "Remove Taser",
-	Callback = function()
-        local args = {
-            [1] = {
-                [1] = "UnequipTool",
-                [2] = "Taser"
-            }
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
-  	end    
-})
 
-Tab:AddDropdown({
-    Name = "TC Items | Use for free ban!",
-    Default = "nil",
-    Options = {"TC-KV21", "TC-MS6", "TC-OP", "TC-SSR", "TC-Katana"},
-    Callback = function(Value)
+ local Dropdown = MenuTab:CreateDropdown({
+   Name = "Menu Opener",
+   Options = {"Crim Store","Dealership","Catalog"},
+   CurrentOption = {},
+   MultipleOptions = false, 
+   Callback = function(selectedOption)
 
-        local args = {
-            [1] = {
-                [1] = "EquipTool",
-                [2] = Value,
-                [3] = "TC"
-            }
-        }
-            
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))  
-    end    
-})
+    local Choice = selectedOption[1]
 
-Tab:AddDropdown({
-    Name = "Unequip TC Items",
-    Default = "nil",
-    Options = {"TC-KV21", "TC-MS6", "TC-OP", "TC-SSR", "TC-Katana"},
-    Callback = function(Value)
-
-        local args = {
-            [1] = {
-                [1] = "UnequipTool",
-                [2] = Value,
-            }
-        }
-            
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))  
-    end    
-})
-
-local Tab = Window:MakeTab({
-	Name = "Menu Opener",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-
-Tab:AddButton({
-	Name = "Catalog",
-	Callback = function()
-        local args = {
+      if Choice == "Catalog" then
+         local args = {
             [1] = {
                 [1] = "GiveCatalog"
             }
         }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ButtonEvent"):FireServer(unpack(args))   
-  	end    
-})
-
-Tab:AddButton({
-	Name = "Dealership",
-	Callback = function()
-        local args = {
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ButtonEvent"):FireServer(unpack(args))
+      
+      elseif Choice == "Crim Store" then
+      elseif Choice == "Dealership" then
+         local args = {
             [1] = {
                 [1] = "View Cars",
                 [2] = workspace:WaitForChild("ScriptableParts"):WaitForChild("Other"):WaitForChild("Interactables"):WaitForChild("CivilianCarSpawner"):WaitForChild("CivilianCarSpawner")
             }
         }
+        
         game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("InteractionEvent"):FireServer(unpack(args))
-  	end    
+        
+      end
+
+   end,
 })
 
-Tab:AddButton({
-	Name = "Bounty",
-	Callback = function()
-        local args = {
-            [1] = {
-                [1] = "Pay Bounty",
-                [2] = workspace:WaitForChild("ScriptableParts"):WaitForChild("Other"):WaitForChild("Interactables"):WaitForChild("PayBail"):WaitForChild("CivilianCarSpawner")
+
+local FunTab = Window:CreateTab("Fun", 14914726918)
+
+local Button = FunTab:CreateButton({
+   Name = "Grinch Fit",
+   Callback = function()
+      local args = {
+         [1] = {
+             [1] = "EquipOutfit",
+             [2] = {
+                 ["HatAccessory"] = "",
+                 ["RightLegColor"] = {
+                     [1] = 237,
+                     [2] = 213,
+                     [3] = 180
+                 },
+                 ["LeftLegColor"] = {
+                     [1] = 237,
+                     [2] = 213,
+                     [3] = 180
+                 },
+                 ["ShouldersAccessory"] = "",
+                 ["Shirt"] = 2797650042,
+                 ["FaceAccessory"] = "",
+                 ["GraphicTShirt"] = 0,
+                 ["RightArmColor"] = {
+                     [1] = 237,
+                     [2] = 213,
+                     [3] = 180
+                 },
+                 ["HairAccessory"] = "104464329606659",
+                 ["FrontAccessory"] = "",
+                 ["NeckAccessory"] = "",
+                 ["TorsoColor"] = {
+                     [1] = 237,
+                     [2] = 213,
+                     [3] = 180
+                 },
+                 ["Pants"] = 2797650943,
+                 ["HeadColor"] = {
+                     [1] = 237,
+                     [2] = 213,
+                     [3] = 180
+                 },
+                 ["Face"] = 86487700,
+                 ["BackAccessory"] = "133064695102262,111802225427537",
+                 ["LeftArmColor"] = {
+                     [1] = 237,
+                     [2] = 213,
+                     [3] = 180
+                 },
+                 ["WaistAccessory"] = ""
+             }
+         }
+     }
+     
+     game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("CatalogFunction"):InvokeServer(unpack(args))     
+   end,
+})
+
+local Label = FunTab:CreateLabel("", 000, Color3.fromRGB(255, 255, 255), false)
+
+local Button = FunTab:CreateButton({
+   Name = "Car Nuker",
+   Callback = function()
+      
+      local servCars = workspace:WaitForChild("ScriptableParts"):WaitForChild("Other"):WaitForChild("IngameVehicles"):GetChildren()
+      local LocalPlayer = game:GetService("Players").LocalPlayer
+
+
+      for i,v in pairs(servCars) do
+         local locked = v.Initialize.Settings.CarLocked.Value
+         local owner = v:GetAttribute("Owner")
+
+         if locked == false and v.Name ~= "Forklift" and owner ~= LocalPlayer.Name and v.DriveSeat.Disabled == true then
+            
+            print(owner)
+
+            local Distance = v.DriveSeat.InteractionPosition.InteractableObject.Range.Distance
+
+            Distance.Value = 999999999999
+
+            local args = {
+                  [1] = {
+                     [1] = "Enter Vehicle",
+                     [2] = v:WaitForChild("DriveSeat"):WaitForChild("InteractionPosition")
+                  }
             }
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("InteractionEvent"):FireServer(unpack(args))
-  	end    
+
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("InteractionEvent"):FireServer(unpack(args))
+
+
+            wait(0.1)
+
+            local args = {
+                  [1] = {
+                     [1] = 99999999
+                  }
+            }
+                     
+            v:WaitForChild("VehicleEvents"):WaitForChild("Damage"):FireServer(unpack(args))
+            
+
+            local args = {
+                  [1] = {
+                     [1] = "PayBounty"
+                  }
+            }
+
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
+         
+
+            wait(3.1)
+
+            local args = {
+                  [1] = false
+            }
+
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("Ragdoll"):FireServer(unpack(args))
+
+
+            wait(0.1)
+         end
+      end
+   end,
 })
 
-
-local ModList = {4291045, 89383969, 169768530, 4168653564, 2537585160, 2316065608, 633752460, 4704223349, 454578312, 691476267, 3233673077, 3238052045, 304478876, 1070198188, 1322073710, 26479694}
-
-game.Players.PlayerAdded:Connect(function(PlayerJoin)
-    local staffname = nil 
-    
-    for i,v in pairs(ModList) do
-        if PlayerJoin.UserId == v then
-            if v == 4291045 then
-                staffname = "Luke (Owner)"
-            elseif v == 169768530 then
-                staffname = "CrxzyCookiie (Co-Owner)"
-            elseif v == 89383969 then
-                staffname = "Wisptich (LeadDev)"
-            elseif v == 4168653564 then 
-                staffname = "GroupLeader012 (Mod)"
-            elseif v == 2537585160 then
-                staffname = "fraudwrd (Mod)"
-            elseif v == 2316065608 then 
-                staffname = "AdamDownFireball"
-            elseif v == 633752460 then
-                staffname = "SirBaconThe5thh (Mod)"
-            elseif v == 4704223349 then
-                staffname = "In4antry (Mod)"
-            elseif v == 454578312 then
-                staffname = "Quazado (Mod)"
-            elseif v == 691476267 then
-                staffname = "CptMilkk (Mod)"
-            elseif v == 3233673077 then 
-                staffname = "ghost_44993 (Mod)"
-            elseif v == 3238052045 then 
-                staffname = "RYAN_dMONSTER (Mod)"
-            elseif v == 304478876 then 
-                staffname = "l0ngitude (Mod)"
-            elseif v == 1070198188 then 
-                staffname = "Sheriff_Dan401 (Mod)"
-            elseif v == 1322073710 then
-                staffname = "ycncooldude ('TC Representative' wtv that means (Snitch))"
-            elseif v == 26479694 then 
-                staffname = "Shobric ('TC Representative' wtv that means (Snitch))"
-            else 
-                staffname = "Unknown staff member"
-            end
-            
-            OrionLib:MakeNotification({
-                Name = "Staff has joined your game!!!",
-                Content = staffname .. " has joined your game, stay cautious!",
-                Image = "rbxassetid://4483345998",
-                Time = 15
-            })
-            
-            break 
-        end
-    end
-end)
-
-
-OrionLib:Init()
+local Button = FunTab:CreateButton({
+   Name = "Server Nuker",
+   Callback = function()
+      for i = 1, 25000 do 
+         local args = {
+             [1] = {
+                 [1] = "MakeSnowball"
+             }
+         }
+     
+         game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("SnowballEvent"):FireServer(unpack(args))
+     end
+   end,
+})
