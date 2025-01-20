@@ -173,7 +173,7 @@ end)
     Name = "Spawn Money",
     PlaceholderText = "000",
     NumbersOnly = true, 
-    CharacterLimit = false, 
+    CharacterLimit = 9999999999999999999999, 
     OnEnter = true, 
     RemoveTextAfterFocusLost = true, 
     Callback = function(Text)
