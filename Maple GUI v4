@@ -167,6 +167,60 @@ end)
 	end,
  })
 
+ local FinancesTab = Window:CreateTab("Finances", 14941475604)
+
+ local Input = FinancesTab:CreateInput({
+    Name = "Spawn Money",
+    PlaceholderText = "000",
+    NumbersOnly = true, 
+    CharacterLimit = false, 
+    OnEnter = true, 
+    RemoveTextAfterFocusLost = true, 
+    Callback = function(Text)
+        local args = {
+            [1] = {
+                [1] = "PlaceOrder",
+                [2] = {
+                    [1] = {
+                        ["Image"] = "rbxassetid://7053136501",
+                        ["Name"] = "DONUT A",
+                        ["Price"] = -Text,
+                        ["Reference"] = workspace:WaitForChild("World"):WaitForChild("Buildings"):WaitForChild("Commercial"):WaitForChild("DunkinDonuts"):WaitForChild("ScriptableParts"):WaitForChild("MenuMonitors"):WaitForChild("Settings"):WaitForChild("ListA"),
+                        ["Quantity"] = 1
+                    }
+                },
+                [3] = workspace:WaitForChild("World"):WaitForChild("Buildings"):WaitForChild("Commercial"):WaitForChild("DunkinDonuts"):WaitForChild("ScriptableParts"):WaitForChild("Kiosks"):WaitForChild("1"):WaitForChild("PP")
+            }
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("JobFunction"):InvokeServer(unpack(args))
+
+        wait()
+
+        local args = {
+            [1] = {
+                [1] = "WalletData"
+            }
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
+        
+        
+        local args = {
+            [1] = {
+                [1] = "WalletData"
+            }
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("BankFunction"):InvokeServer(unpack(args))
+        
+        wait(.01)
+        
+        game:GetService("Players").LocalPlayer.Backpack["Donut (Pink)"]:Destroy()
+    end,
+ })
+
+
  local MenuTab = Window:CreateTab("Menus", 14941475604)
 
 
